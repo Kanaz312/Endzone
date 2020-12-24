@@ -1,0 +1,6 @@
+devid=Kanaz312
+devtitle=Kanaz312
+gameid=Endzone
+gametitle=Endzone
+version=1.27
+icon=metadata/player.png
