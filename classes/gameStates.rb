@@ -1,5 +1,6 @@
 class Game
     include RectangleColliders
+    include EndzoneLandPhysics
 
     attr_accessor :tile_size, :distance, :reset, :tick_count, :run_ended, :display_end, 
                     :enemies_juked, :land, :land_speed, :last_land, :enemies, :player, :words
@@ -38,7 +39,7 @@ class Game
         @words = WordList.new
         args.outputs.static_sprites << @words
         @end_menu = []
-        args.outputs.sounds << "music/runmusic.ogg"
+        #args.outputs.sounds << "music/runmusic.ogg"
     end
 
     def set_player(player, args)
@@ -250,6 +251,7 @@ end
 
 class Tutorial
     include RectangleColliders
+    include EndzoneLandPhysics
 
     attr_accessor :tile_size, :distance, :reset, :tick_count, :run_ended, :display_end, 
     :enemies_juked, :land, :land_speed, :last_land, :enemies, :player, :words

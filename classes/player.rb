@@ -59,7 +59,7 @@ end
 class Player
     attr_sprite
     attr_accessor :collider, :x_vel, :y_vel, :game
-    
+
     def initialize(x, y, game)
         width = 32
         height = 32
@@ -88,6 +88,14 @@ class Player
         @hit_already = false
         @invincibility_timer = -1
         @invincibility_duration = 60
+    end
+
+    def left
+        return @collider.left
+    end
+
+    def right
+        return @collider.right
     end
 
     def extend_stiffarm(time)
@@ -163,68 +171,31 @@ class Player
         @stiff_arm_timer -= 1
         @invincibility_timer -= 1
         @image_num = 1 if @stiff_arm_timer == @stiff_arm_cooldown - 1
-        if !(stiff_arming?) && @game.tick_count % 10 == 0
-            if @stiff_arm_timer < @stiff_arm_cooldown
-                @image_num = 1 - @image_num
-            else
-                if @image_num < 3
-                    @image_num = 3
-                else
-                    @image_num = 7 - @image_num
-                end
-            end
-            @path = "sprites/player#{@image_num}.png"
-        end
-        return true if @collider.right < 5
-        current_land = []
-        available_land = @game.land
-        i = 0
-        while current_land.length == 0
-            land = available_land[i]
-            if @collider.left < land.left
-                return true
-            end
-            if land.x_inside(@collider.left)
-                current_land << land
-                if !land.x_inside(@collider.right)
-                    current_land << available_land[i + 1]
-                end
-            else
-                i += 1
-            end
-        end
-
-        if current_land.length == 1
-            delta_y = current_land[0].displacement_from_player(self)
-            if delta_y > 0
-                @y_vel = -10 
-                @y += delta_y
-                @collider.move(0, delta_y)
-            else
-                @y_vel += @y_accel if @y_vel > -10
-            end
-            if delta_y > -6
-                @jump_possible = true
-            else
-                @jump_possible = false
-            end
+        update_image if !(stiff_arming?) && @game.tick_count % 10 == 0
+        return true if @game.out_of_bounds?(self)
+        delta_y = @game.check_land(self)
+        if delta_y > 0
+            @y_vel = -10 
+            @y += delta_y
+            @collider.move(0, delta_y)
         else
-            higher_index = current_land[0].higher_land_index(current_land[1])
-            delta_y = current_land[higher_index].displacement_from_player(self)
-            if delta_y > -1
-                @y_vel = -10 
-                @y += delta_y if delta_y > 0
-                @collider.move(0, delta_y)
+            @y_vel += @y_accel if @y_vel > -10
+        end
+        @jump_possible = delta_y > -6
+        return false
+    end
+
+    def update_image
+        if @stiff_arm_timer < @stiff_arm_cooldown
+            @image_num = 1 - @image_num
+        else
+            if @image_num < 3
+                @image_num = 3
             else
-                @y_vel += @y_accel if @y_vel > -10
-            end
-            if delta_y > -6
-                @jump_possible = true
-            else
-                @jump_possible = false
+                @image_num = 7 - @image_num
             end
         end
-        return false
+        @path = "sprites/player#{@image_num}.png"
     end
 
     def move(dx, dy)

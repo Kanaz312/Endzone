@@ -54,60 +54,27 @@ class Entity
             @image_num = 0
     end
 
+    def left
+        return @collider.left
+    end
+
+    def right
+        return @collider.right
+    end
+
     def update?
         move(@x_vel, @y_vel)
-        if @collider.right < 5
+        if @game.out_of_bounds?(self)
             @game.juked_enemy
             return true
-        end    
-        current_land = []
-        available_land = @game.land
-        i = 0
-        while current_land.length == 0
-            land = available_land[i]
-            if @collider.left < land.left
-                @game.juked_enemy
-                return true
-            end
-            if land.x_inside(@collider.left)
-                current_land << land
-                if !land.x_inside(@collider.right) && i + 1 < available_land.length
-                    current_land << available_land[i + 1]
-                end
-            else
-                i += 1
-            end
         end
-        if current_land.length == 1
-            delta_y = current_land[0].displacement_from_player(self)
-            if delta_y > 0
-                @y_vel = -1 
-                @y += delta_y
-                @collider.move(0, delta_y)
-            else
-                @y_vel += @y_accel if @y_vel > -10
-            end
+        delta_y = @game.check_land(self)
+        if delta_y > 0
+            @y_vel = -1 
+            @y += delta_y
+            @collider.move(0, delta_y)
         else
-            if current_land[0] == nil
-                higher_index = 1
-            elsif current_land[1] == nil
-                higher_index = 0
-            else
-                higher_index = current_land[0].higher_land_index(current_land[1])
-            end
-
-            if current_land[0] == nil && current_land[1] == nil
-                delta_y = 0
-            else
-                delta_y = current_land[higher_index].displacement_from_player(self)
-            end
-            if delta_y > -1
-                @y_vel = -1 
-                @y += delta_y if delta_y > 0
-                @collider.move(0, delta_y)
-            else
-                @y_vel += @y_accel if @y_vel > -10
-            end
+            @y_vel += @y_accel if @y_vel > -10
         end
         return false
     end
@@ -144,12 +111,13 @@ class Tackler < Entity
     end
 
     def update?
+        need_to_delete = super
         dive_check(@game.player)
         if @game.tick_count % 10 == 0 && !@tackling
             @image_num = 1 - @image_num
             @path = "sprites/tackler#{@image_num}.png"
         end
-        return super
+        return need_to_delete
     end
 end
 
