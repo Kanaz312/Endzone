@@ -1,6 +1,9 @@
 class Game
+    include RectangleColliders
+
     attr_accessor :tile_size, :distance, :reset, :tick_count, :run_ended, :display_end, 
                     :players_juked, :land, :land_speed, :last_land, :enemies, :player, :words
+
 
     def initialize(args)
         @tile_size = 32
@@ -176,7 +179,7 @@ class Shop
         @row = 0
         @col = 0
         @shelves[@row][@col].start_looking(@money)
-        @exit_sign = []
+        #@exit_sign = []
     end
 
     def primitive_marker
@@ -246,6 +249,8 @@ class Shop
 end
 
 class Tutorial
+    include RectangleColliders
+
     attr_accessor :tile_size, :distance, :reset, :tick_count, :run_ended, :display_end, 
     :players_juked, :land, :land_speed, :last_land, :enemies, :player, :words
 
@@ -428,6 +433,4 @@ class Tutorial
     def to_s
         return "Tutorial"
     end
-
-
 end

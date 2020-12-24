@@ -48,7 +48,7 @@ class Entity
             @path = path
             @x_vel = x_vel
             @y_vel = 0
-            @collider = Rectangle.new(@x, @y, @w, @h)
+            @collider = game.createCollider(x, y, w, h)
             @y_accel = -1
             @game = game
             @image_num = 0

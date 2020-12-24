@@ -59,6 +59,7 @@ end
 class Player
     attr_sprite
     attr_accessor :collider, :x_vel, :y_vel, :game
+    
     def initialize(x, y, game)
         width = 32
         height = 32
@@ -71,7 +72,7 @@ class Player
         @b = 255
         @a = 255
         @path = "sprites/player0.png"
-        @collider = Rectangle.new(x, y, width, height)
+        @collider = game.createCollider(x, y, width, height)
         @x_vel = 0
         @y_vel = 0
         @game = game
