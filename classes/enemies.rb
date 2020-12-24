@@ -57,7 +57,7 @@ class Entity
     def update?
         move(@x_vel, @y_vel)
         if @collider.right < 5
-            @game.juked_player
+            @game.juked_enemy
             return true
         end    
         current_land = []
@@ -66,7 +66,7 @@ class Entity
         while current_land.length == 0
             land = available_land[i]
             if @collider.left < land.left
-                @game.juked_player
+                @game.juked_enemy
                 return true
             end
             if land.x_inside(@collider.left)

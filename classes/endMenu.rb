@@ -1,8 +1,8 @@
 class EndMenu
-    def initialize(players_juked, distance, money)
-        @money_earned = (players_juked * 2) + (distance / 10).floor
+    def initialize(enemies_juked, distance, money)
+        @money_earned = (enemies_juked * 2) + (distance / 10).floor
         @total_money = money + @money_earned
-        @text =  ["Players juked: #{players_juked}", "Distance: #{distance} yards", 
+        @text =  ["Players juked: #{enemies_juked}", "Distance: #{distance} yards", 
                     "Money earned: #{@money_earned}", "Total money: #{@total_money}", "Shop", "Retry"]
         @text_size = [10, 35]
         @text_distance = @text_size[1] + 20

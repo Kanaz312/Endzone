@@ -2,7 +2,7 @@ class Game
     include RectangleColliders
 
     attr_accessor :tile_size, :distance, :reset, :tick_count, :run_ended, :display_end, 
-                    :players_juked, :land, :land_speed, :last_land, :enemies, :player, :words
+                    :enemies_juked, :land, :land_speed, :last_land, :enemies, :player, :words
 
 
     def initialize(args)
@@ -12,7 +12,7 @@ class Game
         @tick_count = 0
         @run_ended = false
         @display_end = false
-        @players_juked = 0
+        @enemies_juked = 0
         @stadium_x = 0
     end
 
@@ -78,7 +78,7 @@ class Game
     end
     
     def prep_end_menu(args)
-        @end_menu = EndMenu.new(@players_juked, @distance, args.state.money)
+        @end_menu = EndMenu.new(@enemies_juked, @distance, args.state.money)
         args.outputs.static_sprites << @end_menu
         @display_end = true
         @run_ended = false
@@ -87,8 +87,8 @@ class Game
         @player_list.clear
     end
 
-    def juked_player
-        @players_juked += 1
+    def juked_enemy
+        @enemies_juked += 1
     end
 
     def player_input(keyboard)
@@ -252,7 +252,7 @@ class Tutorial
     include RectangleColliders
 
     attr_accessor :tile_size, :distance, :reset, :tick_count, :run_ended, :display_end, 
-    :players_juked, :land, :land_speed, :last_land, :enemies, :player, :words
+    :enemies_juked, :land, :land_speed, :last_land, :enemies, :player, :words
 
     def initialize(args)
         @tile_size = 32
@@ -261,7 +261,7 @@ class Tutorial
         @tick_count = 0
         @run_ended = false
         @display_end = false
-        @players_juked = 0
+        @enemies_juked = 0
         @tutorial_text = ["Press up to jump", "Jump over the tacklers", "Press right to stiffarm", "Notice the cooldown",
                         "Stiffarm linebackers to push through them", "Words will try to distract you", 
                         "Type out the words to clear them", "That's all! Good luck"]
@@ -317,7 +317,7 @@ class Tutorial
     end
 
     def prep_end_menu(args)
-        @end_menu = EndMenu.new(@players_juked, @distance, args.state.money)
+        @end_menu = EndMenu.new(@enemies_juked, @distance, args.state.money)
         args.outputs.static_sprites << @end_menu
         @display_end = true
         @run_ended = false
@@ -326,8 +326,8 @@ class Tutorial
         @player_list.clear
     end
 
-    def juked_player
-        @players_juked += 1
+    def juked_enemy
+        @enemies_juked += 1
         @cleared_enemy = true
     end
 
@@ -345,7 +345,7 @@ class Tutorial
 
         if keyboard.key_down.right
             player.start_stiff_arm
-            if @jumped && !@stiff_armed && @players_juked == 1
+            if @jumped && !@stiff_armed && @enemies_juked == 1
                 update_text 
                 @stiff_armed = true
                 @text_timer = @text_duration
